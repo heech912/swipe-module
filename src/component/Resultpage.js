@@ -6,13 +6,29 @@ class ResultPage extends Component{
   super(props);
 }
 render(){
+    const cardinfo = this.props.nowcard;
+    this.props.selecteddata.map((props,index) => cardinfo[index].count = props);
   return(
     <div>
-    <p>asdf</p>
-
+    {cardinfo.map((props) => <ResultCard info = {props}/>)}
     <Link to = '/'><button>메인화면으로</button></Link>
 </div>
 )}
+}
+
+class ResultCard extends Component{
+  constructor(props){
+    super(props);
+  }
+  render(){
+    return(<ul>
+<li>{this.props.info.cardname}</li>
+<li>{this.props.info.cardage}</li>
+<li>{this.props.info.cardtwice}</li>
+<li>{this.props.info.count}</li>
+</ul>
+    )
+  }
 }
 
 export default ResultPage;
