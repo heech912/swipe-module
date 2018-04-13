@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Link , Switch } from 'react-router-dom'
 
 class App extends Component {
   render() {
@@ -38,15 +39,50 @@ class Deck extends Component{
   }
 
   render(){
-    return(<div>
-      {console.log(this.state.selectedcard)}
-      <NewCard regNewCard = {this.registerNewCard}/>
-      <DisplayCard nowcard = {this.state.card} select = {this.selectcard}/>
-      </div>
+    {console.log(this.state.selectedcard)}
+    return(
+      <Switch>
+      <Route exact path = "/" render = {(props) => <DisplayCard nowcard = {this.state.card} select = {this.selectcard}/>}/>
+      <Route path = "/newcard" render = {(props) =>
+        <div>
+        <NewCard regNewCard = {this.registerNewCard}/>
+        <DeckMaker nowcard = {this.state.card}/>
+      </div>}/>
+      </Switch>
     )
   }
 }
 
+class DeckMaker extends Component{
+  constructor(props){
+    super(props);
+    const cardlist = this.props.nowcard;
+  }
+
+spancard(param){
+  const leng = param.length;
+  for(let i = 0; i<leng; i++){
+    return(<Card value = {param[1]}/>)
+  }
+}
+
+  render(){
+    return(      {spancard(this.cardlist)}
+
+    )
+  }
+}
+
+class Card extends Component{
+  constructor(props){
+    super(props);
+  }
+  render(){
+    return(
+<p>tst</p>
+    )
+  }
+}
 
 class NewCard extends Component{
   constructor(props){
@@ -77,6 +113,7 @@ class NewCard extends Component{
       <option value="나북이">나북이</option>
       </select><br/>
       <button onClick = {this.handleClick} >제출</button>
+      <Link to = '/'><button>카드고르기</button></Link>
       </div>
     )
   }
@@ -107,8 +144,6 @@ class DisplayCard extends Component{
   }
 
 
-  //편집페이지, 다자택일 설문조사//구글폼
-
   render(){
     return(
       <div>
@@ -118,11 +153,11 @@ class DisplayCard extends Component{
       <p> 좋아하는 트와이스 멤버: {this.props.nowcard[this.state.number].cardtwice}</p>
       <button onClick = {this.yes}>좋아요!</button>
       <button onClick = {this.handleClick }>다음기회에..</button>
+      <Link to = '/newcard'><button> 카드제작하기</button></Link>
       </div>
     )
   }
 }
-
 
 
 
