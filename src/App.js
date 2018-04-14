@@ -12,11 +12,11 @@ class App extends Component {
   }
 }
 
-const initialDeck =[{cardname: 'heech', cardage: "23", cardtwice : "나연"},
-{cardname: 'heec324h', cardage: "22", cardtwice : " 임나연"},
-{cardname: 'hee123ch', cardage: "231", cardtwice : "나북이"},
-{cardname: 'hee1223ch', cardage: "2123", cardtwice : "나연"}
-,{cardname: 'heec3h', cardage: "233", cardtwice : "나연누나"}]
+const initialDeck =[{question: '트와이스를 좋아합니까?', answer: '', display : ''},
+{question: '나연을 좋아합니까?', answer: '', display : ''},
+{question: '인간입니까?', answer: '', display : ''},
+{question: '테라포밍마스를 좋아합니까?', answer: '', display : ''},
+{question: '하스스톤을 즐겨합니까?', answer: '', display : ''},]
 
 
 class Deck extends Component{
@@ -98,11 +98,9 @@ class DisplayCard extends Component{
     return(
       <div>
       <p> [지금 카드] </p>
-      <p> 이름: {this.props.nowcard[this.state.number].cardname}</p>
-      <p>  나이: {this.props.nowcard[this.state.number].cardage}</p>
-      <p> 좋아하는 트와이스 멤버: {this.props.nowcard[this.state.number].cardtwice}</p>
-      <button onClick = {this.yes}>좋아요!</button>
-      <button onClick = {this.no }>다음기회에..</button>
+      <p> 질문: {this.props.nowcard[this.state.number].question}</p>
+      <button onClick = {this.yes }>Likey!</button>
+      <button onClick = {this.no }>TT...</button>
       <Link to = '/newcard'><button> 카드제작하기</button></Link>
       <Link to = '/result'><button> 결과확인하기</button></Link>
       </div>

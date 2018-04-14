@@ -19,9 +19,7 @@ class Card extends Component{
   }
   render(){
     return(<ul>
-<li>{this.props.info.cardname}</li>
-<li>{this.props.info.cardage}</li>
-<li>{this.props.info.cardtwice}</li>
+<li>{this.props.info.question}</li>
 </ul>
     )
   }
@@ -30,7 +28,7 @@ class Card extends Component{
 class NewCard extends Component{
   constructor(props){
     super(props);
-    this.state = {cardname : "heech", cardage: 23, cardtwice : "나연"}
+    this.state = {question : "저랑 보드게임 하실래요?"}
     this.handleInputChange=this.handleInputChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
@@ -47,14 +45,7 @@ class NewCard extends Component{
   render(){
     return(
       <div>
-      이름: <input type="text" name="cardname"  onChange={this.handleInputChange} value = {this.state.name}/><br/>
-      나이: <input type="number" name="cardage"  onChange={this.handleInputChange} value = {this.state.age}/><br/>
-      좋아하는 트와이스 멤버:  <select name="cardtwice"onChange ={this.handleInputChange} value = {this.state.twice}>
-      <option value="나연">나연</option>
-      <option value="임나연">임나연</option>
-      <option value="나연누나">나연누나</option>
-      <option value="나북이">나북이</option>
-      </select><br/>
+      질문: <input type="text" name="question"  onChange={this.handleInputChange} value = {this.state.name}/><br/>
       <button onClick = {this.handleClick} >제출</button>
       <Link to = '/'><button>메인화면으로</button></Link>
       </div>

@@ -22,9 +22,7 @@ class ResultCard extends Component{
   }
   render(){
     return(<ul>
-<li>{this.props.info.cardname}</li>
-<li>{this.props.info.cardage}</li>
-<li>{this.props.info.cardtwice}</li>
+<li>{this.props.info.question}</li>
 <li>{this.props.info.count}</li>
 </ul>
     )
