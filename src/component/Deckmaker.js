@@ -9,7 +9,7 @@ class DeckMaker extends Component{
 
   render(){
     const cardlist = this.props.nowcard;
-    return cardlist.map((props)=><Card info = {props}/>)
+    return cardlist.map((props)=><Card info = {props} />)
   }
 }
 
@@ -28,7 +28,7 @@ class Card extends Component{
 class NewCard extends Component{
   constructor(props){
     super(props);
-    this.state = {question : "저랑 보드게임 하실래요?"}
+    this.state = {id : this.props.leng, question : "저랑 보드게임 하실래요?",  answer: '', display : ''}
     this.handleInputChange=this.handleInputChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
