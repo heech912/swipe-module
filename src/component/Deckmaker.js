@@ -28,7 +28,7 @@ class Card extends Component{
 class NewCard extends Component{
   constructor(props){
     super(props);
-    this.state = {id : this.props.leng, question : "저랑 보드게임 하실래요?",  answer: '', display : ''}
+    this.state = {id : this.props.leng, question : "저랑 보드게임 하실래요?",  logic : ''}
     this.handleInputChange=this.handleInputChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }

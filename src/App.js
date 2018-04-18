@@ -11,56 +11,47 @@ class App extends Component {
   }
 }
 
-const initialDeck =[{id: 0, question: '트와이스를 좋아합니까?', answer: '', display : ''},
-{id: 1, question: '나연을 좋아합니까?', answer: '', display : 1},
-{id: 2, question: '인간입니까?', answer: '', display : 0},
-{id: 3, question: '테라포밍마스를 좋아합니까?', answer: '', display : ''},
-{id: 4, question: '하스스톤을 즐겨합니까?', answer: '', display : 1},]
+const initialDeck =[{id: 0, question: '트와이스를 좋아합니까?', logic: ''},
+{id: 1, question: '나연을 좋아합니까?', logic: ''},
+{id: 2, question: '인간입니까?', logic: ''},
+{id: 3, question: '테라포밍마스를 좋아합니까?', logic: ''},
+{id: 4, question: '하스스톤을 즐겨합니까?', logic: ''},]
 
-const initialDeck2 =[{id: 0, question: '트와이스를 좋아합니까?', answer: '', display : ''},
-{id: 1, question: '나연을 좋아합니까?', answer: '', display : 1},
-{id: 2, question: '인간입니까?', answer: '', display : 0},
-{id: 3, question: '테라포밍마스를 좋아합니까?', answer: '', display : ''},
-{id: 4, question: '하스스톤을 즐겨합니까?', answer: '', display : 1},]
-
+const testdis = [1, 0, '', 1, 0];
 
 class Deck extends Component{
   constructor(props){
     super(props);
-    const initialcount = new Uint8Array(initialDeck.length);
-    this.state = {card : initialDeck, displaycard: initialDeck2, selectedcount : initialcount };
+    let initialcount = new Uint8Array(initialDeck.length);
+    let initialdisplay = new Array(initialDeck.length);
+    let initialanswer = new Array(initialDeck.length);
+    this.state = {card : initialDeck, displaycard: testdis, answer: initialanswer, selectedcount : initialcount };
     this.registerNewCard=this.registerNewCard.bind(this);
     this.selectcard=this.selectcard.bind(this);
-    this.restart = this.restart.bind(this);
   }
 
   registerNewCard(param){
     this.setState((previousState => ({
       card : [...previousState.card , param],
-      displaycard : [...previousState.displaycard , param],
+      displaycard : [...previousState.displaycard , ''],
+      answer : [...previousState.answer , ''],
       selectedcount : [...previousState.selectedcount, 0]
     })));
   }
 
   selectcard(yesorno, num){
     const count = this.state.selectedcount;
-    console.log(count);
     count[num] += yesorno;
   }
 
-  restart(){
-    this.setState(
-      {displaycard : this.state.card}
-    )
-  }
 
 
   render(){
-    {console.log(this.state.selectedcount)}
     return(
       <Switch>
       <Route exact path = "/" render = {(props) =>
-        <DisplayCard nowcard = {this.state.displaycard} select = {this.selectcard} restart = {this.restart}/>}/>
+        <DisplayCard nowcard = {this.state.card} select = {this.selectcard} displayprop = {this.state.displaycard}
+        />}/>
       <Route path = "/newcard" render = {(props) =>
         <div>
         <NewCard regNewCard = {this.registerNewCard} leng = {this.state.card.length}/>
@@ -78,17 +69,19 @@ class Deck extends Component{
 
 class DisplayCard extends Component{
   constructor(props){
-    super(props)
-    this.state = {number : 0, displaycard : this.props.nowcard}
+    super(props);
+    let displaynumber = new Array(this.props.nowcard.length);
+    this.props.nowcard.map((props, index) => displaynumber[index] = props.id);
+    this.state = {number : 0, displaycard : this.props.displayprop, displayid : displaynumber}
     this.handleClick = this.handleClick.bind(this);
     this.yes = this.yes.bind(this);
     this.no = this.no.bind(this);
-    this.distinguish = this.distinguish.bind(this);
+    this.newnumber = this.newnumber.bind(this);
   }
 
   handleClick(){
-    const num = this.state.number
-    const length = this.props.nowcard.length
+    let num = this.state.number
+    let length = this.props.nowcard.length
     if(num<length-1){
       this.setState({number : num + 1})
     }
@@ -98,15 +91,19 @@ class DisplayCard extends Component{
     }
   }
 
-  distinguish(){
-    let temp = this.state.displaycard
-    this.state.displaycard.map((props,index) => {
-      if(props.display === 0){
-        temp.splice(index, 1);
-      }
-    });
-    this.setState({displaycard : temp});
+  newnumber(displaycard, displayid){
+    for(let i= 0; i<displaycard.length; i++){
+    if(displaycard[i] === 1){
+      let temp = displaycard;
+      displaycard[i] = 0;
+      this.setState({number : displayid[i], displaycard : temp});
+      break;
+    }
+    }
+
   }
+
+
 
   yes(){
     this.props.select(1, this.state.number);
@@ -119,6 +116,7 @@ class DisplayCard extends Component{
   }
 
   render(){
+
     return(
       <div>
       <p> [지금 카드] </p>
@@ -127,8 +125,6 @@ class DisplayCard extends Component{
       <button onClick = {this.no }>TT...</button>
       <Link to = '/newcard'><button> 카드제작하기</button></Link>
       <Link to = '/result'><button> 결과확인하기</button></Link>
-      <button onClick = {this.distinguish}>test</button>
-      {console.log(this.props.nowcard)}
       </div>
     )
   }
