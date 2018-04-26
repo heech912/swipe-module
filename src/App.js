@@ -14,8 +14,8 @@ class App extends Component {
 const initialDeck =[{id: 0, question: '트와이스를 좋아합니까?', logic: ''},
 {id: 1, question: '나연을 좋아합니까?', logic: ''},
 {id: 2, question: '인간입니까?', logic: ''},
-{id: 3, question: '테라포밍마스를 좋아합니까?', logic: ''},
-{id: 4, question: '하스스톤을 즐겨합니까?', logic: ''},]
+{id: 3, question: '노양심 흑마유저입니까?', logic: ''},
+{id: 4, question: 'What is love?', logic: ''},]
 
 const testdis = [1, 0, '', 1, 0];
 
@@ -23,9 +23,9 @@ class Deck extends Component{
   constructor(props){
     super(props);
     let initialcount = new Uint8Array(initialDeck.length);
-    let initialdisplay = new Array(initialDeck.length);
-    let initialanswer = new Array(initialDeck.length);
-    this.state = {card : initialDeck, displaycard: testdis, answer: initialanswer, selectedcount : initialcount };
+    let initialdisplaystatus = new Array(initialDeck.length);
+    let initialanswerstatus = new Array(initialDeck.length);
+    this.state = {card : initialDeck, displaystatus: testdis, answerstatus: initialanswerstatus, count : initialcount };
     this.registerNewCard=this.registerNewCard.bind(this);
     this.selectcard=this.selectcard.bind(this);
   }
@@ -33,14 +33,14 @@ class Deck extends Component{
   registerNewCard(param){
     this.setState((previousState => ({
       card : [...previousState.card , param],
-      displaycard : [...previousState.displaycard , ''],
-      answer : [...previousState.answer , ''],
-      selectedcount : [...previousState.selectedcount, 0]
+      displaystatus : [...previousState.displaystatus , ''],
+      answerstatus : [...previousState.answerstatus , ''],
+      count : [...previousState.count, 0]
     })));
   }
 
   selectcard(yesorno, num){
-    const count = this.state.selectedcount;
+    const count = this.state.count;
     count[num] += yesorno;
   }
 
@@ -50,16 +50,16 @@ class Deck extends Component{
     return(
       <Switch>
       <Route exact path = "/" render = {(props) =>
-        <DisplayCard nowcard = {this.state.card} select = {this.selectcard} displayprop = {this.state.displaycard}
+        <SelectCard cardprops = {this.state.card} select = {this.selectcard} displaystatusprop = {this.state.displaystatus}
         />}/>
       <Route path = "/newcard" render = {(props) =>
         <div>
         <NewCard regNewCard = {this.registerNewCard} leng = {this.state.card.length}/>
-        <DeckMaker nowcard = {this.state.card}/>
+        <DeckMaker cardprops = {this.state.card}/>
       </div>}/>
       <Route path = "/result" render = {(props) =>
         <div>
-        <ResultPage nowcard = {this.state.card} selecteddata = {this.state.selectedcount}/>
+        <ResultPage cardprops = {this.state.card} selecteddata = {this.state.count}/>
       </div>}/>
       </Switch>
     )
@@ -67,12 +67,12 @@ class Deck extends Component{
 }
 
 
-class DisplayCard extends Component{
+class SelectCard extends Component{
   constructor(props){
     super(props);
-    let displaynumber = new Array(this.props.nowcard.length);
-    this.props.nowcard.map((props, index) => displaynumber[index] = props.id);
-    this.state = {number : 0, displaycard : this.props.displayprop, displayid : displaynumber}
+    let displaystatusnumber = new Array(this.props.cardprops.length);
+    this.props.cardprops.map((props, index) => displaystatusnumber[index] = props.id);
+    this.state = {number : 0, displaystatus : this.props.displaystatusprop, displaystatusid : displaystatusnumber}
     this.handleClick = this.handleClick.bind(this);
     this.yes = this.yes.bind(this);
     this.no = this.no.bind(this);
@@ -81,7 +81,7 @@ class DisplayCard extends Component{
 
   handleClick(){
     let num = this.state.number
-    let length = this.props.nowcard.length
+    let length = this.props.cardprops.length
     if(num<length-1){
       this.setState({number : num + 1})
     }
@@ -91,12 +91,12 @@ class DisplayCard extends Component{
     }
   }
 
-  newnumber(displaycard, displayid){
-    for(let i= 0; i<displaycard.length; i++){
-    if(displaycard[i] === 1){
-      let temp = displaycard;
-      displaycard[i] = 0;
-      this.setState({number : displayid[i], displaycard : temp});
+  newnumber(displaystatus, displaystatusid){
+    for(let i= 0; i<displaystatus.length; i++){
+    if(displaystatus[i] === 1){
+      let temp = displaystatus;
+      displaystatus[i] = 0;
+      this.setState({number : displaystatusid[i], displaystatus : temp});
       break;
     }
     }
@@ -120,11 +120,12 @@ class DisplayCard extends Component{
     return(
       <div>
       <p> [지금 카드] </p>
-      <p> 질문: {this.props.nowcard[this.state.number].question}</p>
+      <p> 질문: {this.props.cardprops[this.state.number].question}</p>
       <button onClick = {this.yes }>Likey!</button>
       <button onClick = {this.no }>TT...</button>
       <Link to = '/newcard'><button> 카드제작하기</button></Link>
       <Link to = '/result'><button> 결과확인하기</button></Link>
+      <img src = {require('./img/Nayeon.jpg')}/>
       </div>
     )
   }

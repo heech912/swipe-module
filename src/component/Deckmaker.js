@@ -8,7 +8,7 @@ class DeckMaker extends Component{
 
 
   render(){
-    const cardlist = this.props.nowcard;
+    const cardlist = this.props.cardprops;
     return cardlist.map((props)=><Card info = {props} />)
   }
 }
