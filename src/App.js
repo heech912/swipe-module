@@ -89,13 +89,14 @@ class SelectCard extends Component{
       alert('참여해주셔서 감사합니다.')
       this.setState({number : 0})
     }
+this.newnumber(this.state.displaystatus, this.state.displaystatusid)
   }
 
   newnumber(displaystatus, displaystatusid){
-    for(let i= 0; i<displaystatus.length; i++){
+    for(let i= this.state.number; i<displaystatus.length; i++){
     if(displaystatus[i] === 1){
-      let temp = displaystatus;
-      displaystatus[i] = 0;
+      let temp = [...displaystatus];
+      temp[i] = 0;
       this.setState({number : displaystatusid[i], displaystatus : temp});
       break;
     }
@@ -116,7 +117,6 @@ class SelectCard extends Component{
   }
 
   render(){
-
     return(
       <div>
       <p> [지금 카드] </p>
@@ -124,12 +124,18 @@ class SelectCard extends Component{
       <button onClick = {this.yes }>Likey!</button>
       <button onClick = {this.no }>TT...</button>
       <Link to = '/newcard'><button> 카드제작하기</button></Link>
-      <Link to = '/result'><button> 결과확인하기</button></Link>
+      <Link to = '/result'><button> 결과확인하기</button></Link><br/>
       <img src = {require('./img/Nayeon.jpg')}/>
+      {}
       </div>
     )
   }
 }
+
+
+
+
+
 
 
 export default App;
