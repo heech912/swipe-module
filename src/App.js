@@ -11,13 +11,19 @@ class App extends Component {
   }
 }
 
-const initialDeck =[{id: 0, question: '트와이스를 좋아합니까?', logic: ''},
-{id: 1, question: '나연을 좋아합니까?', logic: ''},
-{id: 2, question: '인간입니까?', logic: ''},
-{id: 3, question: '노양심 흑마유저입니까?', logic: ''},
-{id: 4, question: 'What is love?', logic: ''},]
+const initialDeck =[{id: 0, question: '나연을 좋아합니까?', logic: ''},
+{id: 1, question: '정연을 좋아합니까?', logic: ''},
+{id: 2, question: '사나를 좋아합니까?', logic: ''},
+{id: 3, question: '모모를 좋아합니까?', logic: ''},
+{id: 4, question: '지효를 좋아합니까?', logic: ''},
+{id: 5, question: '미나를 좋아합니까?', logic: ''},
+{id: 6, question: '다현을 좋아합니까?', logic: ''},
+{id: 7, question: '채영을 좋아합니까?', logic: ''},
+{id: 8, question: '쯔위를 좋아합니까?', logic: ''},
+{id: 9, question: '트와이스를 좋아합니까?', logic: ''},]
 
-const testdis = [1, 0, '', 1, 0];
+const testdis = [0, 1, '', 1, 0, 1, '', '', 1, 0];
+const testdis2 = [0,0,0,0,0,0,0,0,0,0];
 
 class Deck extends Component{
   constructor(props){
@@ -25,7 +31,13 @@ class Deck extends Component{
     let initialcount = new Uint8Array(initialDeck.length);
     let initialdisplaystatus = new Array(initialDeck.length);
     let initialanswerstatus = new Array(initialDeck.length);
-    this.state = {card : initialDeck, displaystatus: testdis, answerstatus: initialanswerstatus, count : initialcount };
+    this.state = {
+      card : initialDeck,
+      displaystatus: testdis,
+      answerstatus: initialanswerstatus,
+      count : initialcount,
+      restart : 0 
+    };
     this.registerNewCard=this.registerNewCard.bind(this);
     this.selectcard=this.selectcard.bind(this);
   }
@@ -98,26 +110,26 @@ class SelectCard extends Component{
     this.newnumber = this.newnumber.bind(this);
   }
 
+componentWillMount(){
+  this.newnumber(this.state.displaystatus, this.state.displaystatusid)
+}
+
   handleClick(){
     let num = this.state.number
     let length = this.props.cardprops.length
     if(num<length-1){
-      this.setState({number : num + 1})
+  this.newnumber(this.state.displaystatus, this.state.displaystatusid)
     }
-    else{
-      alert('참여해주셔서 감사합니다.')
-      this.setState({number : 0})
-
-    }
-this.newnumber(this.state.displaystatus, this.state.displaystatusid)
   }
 
+
+
   newnumber(displaystatus, displaystatusid){
-    for(let i= this.state.number; i<displaystatus.length; i++){
+    for(let i= 0; i<displaystatus.length; i++){
     if(displaystatus[i] === 1){
       let temp = [...displaystatus];
       temp[i] = 0;
-      this.setState({number : displaystatusid[i], displaystatus : temp});
+      this.setState({number  : displaystatusid[i], displaystatus : temp});
       break;
     }
     }
