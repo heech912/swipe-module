@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link , Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link , Switch, Redirect } from 'react-router-dom'
 import ResultPage from './component/Resultpage.js';
 import {NewCard, DeckMaker} from './component/Deckmaker.js';
 
@@ -49,7 +49,8 @@ class Deck extends Component{
   render(){
     return(
       <Switch>
-      <Route exact path = "/" render = {(props) =>
+      <Route exact path = "/" component = {InitialPage}/>
+      <Route path = "/selectcard" render = {(props) =>
         <SelectCard cardprops = {this.state.card} select = {this.selectcard} displaystatusprop = {this.state.displaystatus}
         />}/>
       <Route path = "/newcard" render = {(props) =>
@@ -64,6 +65,24 @@ class Deck extends Component{
       </Switch>
     )
   }
+}
+
+class InitialPage extends Component{
+  constructor(props){
+    super(props);
+  }
+
+render(){
+  return(
+    <div>
+    <Link to = '/selectcard'><button> 설문조사시작! </button></Link>
+    <Link to = '/newcard'><button> 카드제작하기</button></Link>
+    <Link to = '/result'><button> 결과확인하기</button></Link><br/>
+    <img src = {require('./img/Nayeon.jpg')}/>
+    </div>
+  )
+}
+
 }
 
 
@@ -88,6 +107,7 @@ class SelectCard extends Component{
     else{
       alert('참여해주셔서 감사합니다.')
       this.setState({number : 0})
+
     }
 this.newnumber(this.state.displaystatus, this.state.displaystatusid)
   }
@@ -103,6 +123,7 @@ this.newnumber(this.state.displaystatus, this.state.displaystatusid)
     }
 
   }
+
 
 
 
@@ -122,11 +143,8 @@ this.newnumber(this.state.displaystatus, this.state.displaystatusid)
       <p> [지금 카드] </p>
       <p> 질문: {this.props.cardprops[this.state.number].question}</p>
       <button onClick = {this.yes }>Likey!</button>
-      <button onClick = {this.no }>TT...</button>
-      <Link to = '/newcard'><button> 카드제작하기</button></Link>
-      <Link to = '/result'><button> 결과확인하기</button></Link><br/>
+      <button onClick = {this.no }>TT...</button><br/>
       <img src = {require('./img/Nayeon.jpg')}/>
-      {}
       </div>
     )
   }
