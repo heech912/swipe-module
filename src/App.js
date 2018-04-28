@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link , Switch, Redirect } from 'react-router-dom'
 import ResultPage from './component/Resultpage.js';
-import {NewCard, DeckMaker} from './component/Deckmaker.js';
+import {NewCard, DisplayDeck} from './component/Deckmaker.js';
 
 class App extends Component {
   render() {
@@ -23,7 +23,6 @@ const initialDeck =[{id: 0, question: '나연을 좋아합니까?', logic: ''},
 {id: 9, question: '트와이스를 좋아합니까?', logic: ''},]
 
 const testdis = [0, 1, '', 1, 0, 1, '', '', 1, 0];
-const testdis2 = [0,0,0,0,0,0,0,0,0,0];
 
 class Deck extends Component{
   constructor(props){
@@ -31,15 +30,22 @@ class Deck extends Component{
     let initialcount = new Uint8Array(initialDeck.length);
     let initialdisplaystatus = new Array(initialDeck.length);
     let initialanswerstatus = new Array(initialDeck.length);
+    let initialorder = new Array(initialDeck.length);
+    for(let i = 0; i<initialorder.length; i++){
+      initialorder[i] = i;
+    }
     this.state = {
       card : initialDeck,
       displaystatus: testdis,
       answerstatus: initialanswerstatus,
       count : initialcount,
-      restart : 0 
+      order : initialorder,
+      initialize : 0
     };
     this.registerNewCard=this.registerNewCard.bind(this);
     this.selectcard=this.selectcard.bind(this);
+    this.initialize = this.initialize.bind(this);
+    this.restart = this.restart.bind(this);
   }
 
   registerNewCard(param){
@@ -51,25 +57,37 @@ class Deck extends Component{
     })));
   }
 
+initialize(){
+  let initialanswerstatus = new Array(this.state.card.length);
+  alert("참여해 주셔서 감사합니다.");
+  this.setState({initialize : 1, answerstatus : initialanswerstatus })
+}
+
+restart(){
+  this.setState({initialize : 0})
+}
+
   selectcard(yesorno, num){
-    const count = this.state.count;
+    let count = this.state.count;
+    let answerstatus = this.state.answerstatus;
     count[num] += yesorno;
+    answerstatus[num] = yesorno;
   }
 
-
-
   render(){
+    console.log(this.state.order[10])
     return(
       <Switch>
-      <Route exact path = "/" component = {InitialPage}/>
-      <Route path = "/selectcard" render = {(props) =>
-        <SelectCard cardprops = {this.state.card} select = {this.selectcard} displaystatusprop = {this.state.displaystatus}
-        />}/>
-      <Route path = "/newcard" render = {(props) =>
-        <div>
+      <Route exact path = "/" render = {(props) => <InitialPage restartPF = {this.restart}/>}/>
+      <Route path = "/selectcard" render = {(props) => (this.state.initialize?
+        (<Redirect exact to = '/'/>):(
+        <SelectCard cardprops = {this.state.card} select = {this.selectcard} displaystatusprop = {this.state.displaystatus} initializePF = {this.initialize}
+        />))}/>
+      <Route path = "/newcard" render = {(props) => (<div>
         <NewCard regNewCard = {this.registerNewCard} leng = {this.state.card.length}/>
-        <DeckMaker cardprops = {this.state.card}/>
-      </div>}/>
+        <DisplayDeck cardPS = {this.state.card}/>
+      </div>)
+    }/>
       <Route path = "/result" render = {(props) =>
         <div>
         <ResultPage cardprops = {this.state.card} selecteddata = {this.state.count}/>
@@ -87,7 +105,7 @@ class InitialPage extends Component{
 render(){
   return(
     <div>
-    <Link to = '/selectcard'><button> 설문조사시작! </button></Link>
+    <Link to = '/selectcard'><button onClick = {this.props.restartPF}> 설문조사시작! </button></Link>
     <Link to = '/newcard'><button> 카드제작하기</button></Link>
     <Link to = '/result'><button> 결과확인하기</button></Link><br/>
     <img src = {require('./img/Nayeon.jpg')}/>
@@ -104,7 +122,6 @@ class SelectCard extends Component{
     let displaystatusnumber = new Array(this.props.cardprops.length);
     this.props.cardprops.map((props, index) => displaystatusnumber[index] = props.id);
     this.state = {number : 0, displaystatus : this.props.displaystatusprop, displaystatusid : displaystatusnumber}
-    this.handleClick = this.handleClick.bind(this);
     this.yes = this.yes.bind(this);
     this.no = this.no.bind(this);
     this.newnumber = this.newnumber.bind(this);
@@ -114,39 +131,30 @@ componentWillMount(){
   this.newnumber(this.state.displaystatus, this.state.displaystatusid)
 }
 
-  handleClick(){
-    let num = this.state.number
-    let length = this.props.cardprops.length
-    if(num<length-1){
-  this.newnumber(this.state.displaystatus, this.state.displaystatusid)
-    }
-  }
-
-
-
-  newnumber(displaystatus, displaystatusid){
+newnumber(displaystatus, displaystatusid){
+    var initializetoken =0;
     for(let i= 0; i<displaystatus.length; i++){
     if(displaystatus[i] === 1){
       let temp = [...displaystatus];
       temp[i] = 0;
+      initializetoken = 1;
       this.setState({number  : displaystatusid[i], displaystatus : temp});
       break;
     }
     }
-
+    if(initializetoken == 0){
+      this.props.initializePF();
+    }
   }
-
-
-
 
   yes(){
     this.props.select(1, this.state.number);
-    this.handleClick();
+    this.newnumber(this.state.displaystatus, this.state.displaystatusid);
   }
 
   no(){
     this.props.select(0, this.state.number);
-    this.handleClick();
+    this.newnumber(this.state.displaystatus, this.state.displaystatusid)
   }
 
   render(){

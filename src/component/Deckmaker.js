@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link , Switch } from 'react-router-dom'
+import {CurrentCard} from './EditCardLogic.js'
+import '../App.css'
 
-class DeckMaker extends Component{
+class DisplayDeck extends Component{
   constructor(props){
     super(props);
     }
 
 
   render(){
-    const cardlist = this.props.cardprops;
-    return cardlist.map((props)=><Card info = {props} />)
+    let cardlist = this.props.cardPS;
+    return cardlist.map((props)=><Card info = {props} />);
   }
 }
 
@@ -18,9 +20,8 @@ class Card extends Component{
     super(props);
   }
   render(){
-    return(<ul>
-<li>{this.props.info.question}</li>
-</ul>
+    return(
+<p class = 'card' draggable = "true" onClick = {()=>alert('dsf')}>{this.props.info.question}</p>
     )
   }
 }
@@ -34,8 +35,7 @@ class NewCard extends Component{
   }
 
   handleInputChange(event){
-    const category = event.target.name;
-    this.setState({[category] : event.target.value});
+    this.setState({question : event.target.value});
   }
 
   handleClick(){
@@ -53,4 +53,4 @@ class NewCard extends Component{
   }
 }
 
-export {NewCard, DeckMaker, Card};
+export {NewCard, DisplayDeck, Card};
