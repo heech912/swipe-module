@@ -6,12 +6,20 @@ import '../App.css'
 class DisplayDeck extends Component{
   constructor(props){
     super(props);
+    this.allowDrop = this.allowDrop.bind(this);
     }
 
+allowDrop(e){
+  e.preventDefault();
+}
 
   render(){
     let cardlist = this.props.cardPS;
-    return cardlist.map((props)=><Card info = {props} />);
+    return (<div>
+      {cardlist.map((props)=><p class = "frame" ><Card info = {props}/></p>)}
+      <p class = "frame" onDragOver = {this.allowDrop} onDrop = {()=>alert('dropped~!')}></p>
+      </div>
+    )
   }
 }
 
