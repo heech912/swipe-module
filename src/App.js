@@ -39,13 +39,14 @@ class Deck extends Component{
       displaystatus: testdis,
       answerstatus: initialanswerstatus,
       count : initialcount,
-      order : initialorder,
+      order : [9,1,3,2,4,5,7,6,0,8],//위치는 순서, element는 card.id
       initialize : 0
     };
     this.registerNewCard=this.registerNewCard.bind(this);
     this.selectcard=this.selectcard.bind(this);
     this.initialize = this.initialize.bind(this);
     this.restart = this.restart.bind(this);
+    this.changeorder = this.changeorder.bind(this);
   }
 
   registerNewCard(param){
@@ -53,7 +54,8 @@ class Deck extends Component{
       card : [...previousState.card , param],
       displaystatus : [...previousState.displaystatus , ''],
       answerstatus : [...previousState.answerstatus , ''],
-      count : [...previousState.count, 0]
+      count : [...previousState.count, 0],
+      order : [...previousState.order, previousState.order.length]
     })));
   }
 
@@ -67,7 +69,15 @@ restart(){
   this.setState({initialize : 0})
 }
 
-  selectcard(yesorno, num){
+changeorder(initialloc, finalloc){
+  let temparr = [...this.state.order];
+  let tempid = temparr[finalloc];
+  temparr[finalloc] = temparr[initialloc];
+  temparr[initialloc] = tempid;
+  this.setState({order : temparr})
+}
+
+selectcard(yesorno, num){
     let count = this.state.count;
     let answerstatus = this.state.answerstatus;
     count[num] += yesorno;
@@ -75,22 +85,26 @@ restart(){
   }
 
   render(){
-    console.log(this.state.order[10])
     return(
       <Switch>
       <Route exact path = "/" render = {(props) => <InitialPage restartPF = {this.restart}/>}/>
       <Route path = "/selectcard" render = {(props) => (this.state.initialize?
         (<Redirect exact to = '/'/>):(
-        <SelectCard cardprops = {this.state.card} select = {this.selectcard} displaystatusprop = {this.state.displaystatus} initializePF = {this.initialize}
+        <SelectCard
+          cardPS = {this.state.card}
+          select = {this.selectcard}
+          displaystatusPS = {this.state.displaystatus}
+          initializePF = {this.initialize}
+          orderPS = {this.state.order}
         />))}/>
       <Route path = "/newcard" render = {(props) => (<div>
         <NewCard regNewCard = {this.registerNewCard} leng = {this.state.card.length}/>
-        <DisplayDeck cardPS = {this.state.card}/>
+        <DisplayDeck cardPS = {this.state.card} orderPS = {this.state.order} changeorderPF = {this.changeorder}/>
       </div>)
     }/>
       <Route path = "/result" render = {(props) =>
         <div>
-        <ResultPage cardprops = {this.state.card} selecteddata = {this.state.count}/>
+        <ResultPage cardPS = {this.state.card} selecteddata = {this.state.count}/>
       </div>}/>
       </Switch>
     )
@@ -119,26 +133,24 @@ render(){
 class SelectCard extends Component{
   constructor(props){
     super(props);
-    let displaystatusnumber = new Array(this.props.cardprops.length);
-    this.props.cardprops.map((props, index) => displaystatusnumber[index] = props.id);
-    this.state = {number : 0, displaystatus : this.props.displaystatusprop, displaystatusid : displaystatusnumber}
+    this.state = {number : this.props.orderPS[0], displaystatus : this.props.displaystatusPS, order : this.props.orderPS}
     this.yes = this.yes.bind(this);
     this.no = this.no.bind(this);
     this.newnumber = this.newnumber.bind(this);
   }
 
 componentWillMount(){
-  this.newnumber(this.state.displaystatus, this.state.displaystatusid)
+  this.newnumber(this.state.displaystatus, this.state.order)
 }
 
-newnumber(displaystatus, displaystatusid){
+newnumber(displaystatus, order){
     var initializetoken =0;
-    for(let i= 0; i<displaystatus.length; i++){
-    if(displaystatus[i] === 1){
+    for(let i= 0; i<order.length; i++){
+    if(displaystatus[order[i]] === 1){
       let temp = [...displaystatus];
-      temp[i] = 0;
+      temp[order[i]] = 0;
       initializetoken = 1;
-      this.setState({number  : displaystatusid[i], displaystatus : temp});
+      this.setState({number  : [order[i]], displaystatus : temp});
       break;
     }
     }
@@ -149,19 +161,19 @@ newnumber(displaystatus, displaystatusid){
 
   yes(){
     this.props.select(1, this.state.number);
-    this.newnumber(this.state.displaystatus, this.state.displaystatusid);
+    this.newnumber(this.state.displaystatus, this.state.order);
   }
 
   no(){
     this.props.select(0, this.state.number);
-    this.newnumber(this.state.displaystatus, this.state.displaystatusid)
+    this.newnumber(this.state.displaystatus, this.state.order)
   }
 
   render(){
     return(
       <div>
       <p> [지금 카드] </p>
-      <p> 질문: {this.props.cardprops[this.state.number].question}</p>
+      <p> 질문: {this.props.cardPS[this.state.number].question}</p>
       <button onClick = {this.yes }>Likey!</button>
       <button onClick = {this.no }>TT...</button><br/>
       <img src = {require('./img/Nayeon.jpg')}/>

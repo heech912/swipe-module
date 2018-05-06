@@ -6,7 +6,7 @@ class ResultPage extends Component{
   super(props);
 }
 render(){
-    let cardinfo = this.props.cardprops;
+    let cardinfo = this.props.cardPS;
     this.props.selecteddata.map((props,index) => cardinfo[index].count = props);
   return(
     <div>

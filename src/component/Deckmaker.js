@@ -6,18 +6,29 @@ import '../App.css'
 class DisplayDeck extends Component{
   constructor(props){
     super(props);
+    this.state ={initialloc : 3}
     this.allowDrop = this.allowDrop.bind(this);
+    this.getinitialloc = this.getinitialloc.bind(this);
     }
 
 allowDrop(e){
   e.preventDefault();
 }
 
+getinitialloc(loc){
+  this.setState({initialloc : loc});
+}
+
   render(){
-    let cardlist = this.props.cardPS;
     return (<div>
-      {cardlist.map((props)=><p class = "frame" ><Card info = {props}/></p>)}
-      <p class = "frame" onDragOver = {this.allowDrop} onDrop = {()=>alert('dropped~!')}></p>
+      {this.props.orderPS.map((param)=><p class = "frame"
+      onDragOver = {this.allowDrop}
+      onDrop = {()=>alert('dropped~!')} >
+      <Card
+      info = {this.props.cardPS[param]}
+      location = {this.props.orderPS.indexOf(param)}
+      getinitiallocPF = {this.getinitialloc} /></p>)}
+      <p class = "frame"/>
       </div>
     )
   }
@@ -29,7 +40,7 @@ class Card extends Component{
   }
   render(){
     return(
-<p class = 'card' draggable = "true" onClick = {()=>alert('dsf')}>{this.props.info.question}</p>
+<p class = 'card' draggable = "true" onDragStart={this.props.getinitiallocPF(this.props.location)}>{this.props.info.question}</p>
     )
   }
 }
