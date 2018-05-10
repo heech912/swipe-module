@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link , Switch, Redirect } from 'react-router-dom'
 import ResultPage from './component/Resultpage.js';
+import EditCardLogic from './component/EditCardLogic.js'
 import {NewCard, DisplayDeck} from './component/Deckmaker.js';
 
 class App extends Component {
@@ -11,16 +12,16 @@ class App extends Component {
   }
 }
 
-const initialDeck =[{id: 0, question: '나연을 좋아합니까?', logic: ''},
-{id: 1, question: '정연을 좋아합니까?', logic: ''},
-{id: 2, question: '사나를 좋아합니까?', logic: ''},
-{id: 3, question: '모모를 좋아합니까?', logic: ''},
-{id: 4, question: '지효를 좋아합니까?', logic: ''},
-{id: 5, question: '미나를 좋아합니까?', logic: ''},
-{id: 6, question: '다현을 좋아합니까?', logic: ''},
-{id: 7, question: '채영을 좋아합니까?', logic: ''},
-{id: 8, question: '쯔위를 좋아합니까?', logic: ''},
-{id: 9, question: '트와이스를 좋아합니까?', logic: ''},]
+const initialDeck =[{id: 0, question: '나연을 좋아합니까?', pic : '', logic: ''},
+{id: 1, question: '정연을 좋아합니까?', pic : '', logic: ''},
+{id: 2, question: '사나를 좋아합니까?', pic : '', logic: ''},
+{id: 3, question: '모모를 좋아합니까?', pic : '', logic: ''},
+{id: 4, question: '지효를 좋아합니까?', pic : '', logic: ''},
+{id: 5, question: '미나를 좋아합니까?', pic : '', logic: ''},
+{id: 6, question: '다현을 좋아합니까?', pic : '', logic: ''},
+{id: 7, question: '채영을 좋아합니까?', pic : '', logic: ''},
+{id: 8, question: '쯔위를 좋아합니까?', pic : '', logic: ''},
+{id: 9, question: '트와이스를 좋아합니까?', pic : '', logic: ''},]
 
 const testdis = [0, 1, '', 1, 0, 1, '', '', 1, 0];
 
@@ -52,7 +53,7 @@ class Deck extends Component{
   registerNewCard(param){
     this.setState((previousState => ({
       card : [...previousState.card , param],
-      displaystatus : [...previousState.displaystatus , ''],
+      displaystatus : [...previousState.displaystatus , 1],
       answerstatus : [...previousState.answerstatus , ''],
       count : [...previousState.count, 0],
       order : [...previousState.order, previousState.order.length]
@@ -100,6 +101,7 @@ selectcard(yesorno, num){
       <Route path = "/newcard" render = {(props) => (<div>
         <NewCard regNewCard = {this.registerNewCard} leng = {this.state.card.length}/>
         <DisplayDeck cardPS = {this.state.card} orderPS = {this.state.order} changeorderPF = {this.changeorder}/>
+        <EditCardLogic/>
       </div>)
     }/>
       <Route path = "/result" render = {(props) =>
@@ -173,10 +175,10 @@ newnumber(displaystatus, order){
     return(
       <div>
       <p> [지금 카드] </p>
-      <p> 질문: {this.props.cardPS[this.state.number].question}</p>
+      <p> 질문: {this.props.cardPS[this.state.number].  question}</p>
       <button onClick = {this.yes }>Likey!</button>
       <button onClick = {this.no }>TT...</button><br/>
-      <img src = {require('./img/Nayeon.jpg')}/>
+      <img src = {this.props.cardPS[this.state.number].pic}/>
       </div>
     )
   }

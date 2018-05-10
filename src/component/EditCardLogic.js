@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
+import '../App.css';
 
-class CurrentCard extends Component{
+class EditCardLogic extends Component{
   constructor(props){
     super(props);
   }
 
   render(){
-    return(<div>
-      <p> '지금 편집중인 카드:'</p><br/>
-      </div>
+    return(<p class='background'   >
+      <p> 지금 편집중인 카드:</p><br/>
+      </p>
     )
   }
 }
 
-export default CurrentCard;
+export default EditCardLogic;
