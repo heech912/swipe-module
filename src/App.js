@@ -101,7 +101,7 @@ selectcard(yesorno, num){
       <Route path = "/newcard" render = {(props) => (<div>
         <NewCard regNewCard = {this.registerNewCard} leng = {this.state.card.length}/>
         <DisplayDeck cardPS = {this.state.card} orderPS = {this.state.order} changeorderPF = {this.changeorder}/>
-        <EditCardLogic/>
+
       </div>)
     }/>
       <Route path = "/result" render = {(props) =>
